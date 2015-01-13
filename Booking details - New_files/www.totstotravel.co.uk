@@ -1,0 +1,439 @@
+feefoproductfound="";
+var FeefoSlideSpeed = 25;
+var feefoParams="";
+var feefoMethod = "";
+var feefoproto=parent.location.protocol;
+var FeefoSliderTop = 0;
+if (feefoproto=="file:") {
+	feefoproto="http:";
+}
+var feeforeloading = false;
+var feefoWidth = 0, feefoHeight = 0;
+
+// insertAdjacentHTML(), insertAdjacentText() and insertAdjacentElement
+// ()
+// for Netscape 6/Mozilla by Thor Larholm me@jscript.dk
+// Usage: include this code segment at the beginning of your document
+// before any other Javascript contents.
+
+if(typeof HTMLElement!="undefined" && !
+ HTMLElement.prototype.insertAdjacentElement){
+ HTMLElement.prototype.insertAdjacentElement = function
+ (where,parsedNode)
+ {
+ switch (where){
+ case 'beforeBegin':
+ this.parentNode.insertBefore(parsedNode,this)
+ break;
+ case 'afterBegin':
+ this.insertBefore(parsedNode,this.firstChild);
+ break;
+ case 'beforeEnd':
+ this.appendChild(parsedNode);
+ break;
+ case 'afterEnd':
+ if (this.nextSibling)
+ this.parentNode.insertBefore(parsedNode,this.nextSibling);
+ else this.parentNode.appendChild(parsedNode);
+ break;
+ }
+ }
+
+ HTMLElement.prototype.insertAdjacentHTML = function
+ (where,htmlStr)
+ {
+ var r = this.ownerDocument.createRange();
+ r.setStartBefore(this);
+ var parsedHTML = r.createContextualFragment(htmlStr);
+ this.insertAdjacentElement(where,parsedHTML)
+ }
+
+
+ HTMLElement.prototype.insertAdjacentText = function
+ (where,txtStr)
+ {
+ var parsedText = document.createTextNode(txtStr)
+ this.insertAdjacentElement(where,parsedText)
+ }
+ }
+
+// end on insertadjacent code
+
+  feefoGetWindowSize();
+  window.onresize = function(){feefoGetWindowSize()};
+  document.onclick = function (e) {
+		e = e || event
+                //if the user clicks anywhere except on the logo or the reviews then remove the reviews
+		var feefopage = document.getElementById("feefopage");
+		if (feefopage.style.right == "3000px") return;		
+                  
+		var feefotarget = e.target || e.srcElement
+		var feefologoa = document.getElementById("feefologoa");
+
+		do {
+			if (feefopage == feefotarget || feefologoa == feefotarget) {
+				return
+			}
+			feefotarget = feefotarget.parentNode
+		} while (feefotarget)
+                if (feefoMethod == "bottomrightsmooth") FeefoSmooth("right");
+	        else {
+			if (feefoMethod == "bottomleftsmooth") FeefoSmooth("left");
+			else {
+                feefopage.style.left="";
+				feefopage.style.right='3000px';
+                		document.getElementById("feefofade").style.display = "none";
+			}
+		}
+  }
+  
+
+  		
+feefoloadlogo('www.totstotravel.co.uk','method=popup&servicedefault=true');
+
+function feefoGetWindowSize(){
+    feefoSliding = false;
+    if (typeof (window.innerWidth) == 'number') {
+       //Non-IE
+       feefoWidth = window.innerWidth;
+       feefoHeight = window.innerHeight;
+   } else if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
+       //IE 6+ in 'standards compliant mode'
+       feefoWidth = document.documentElement.clientWidth;
+       feefoHeight = document.documentElement.clientHeight;
+   } else if (document.body && (document.body.clientWidth || document.body.clientHeight)) {
+       //IE 4 compatible
+       feefoWidth = document.body.clientWidth;
+       feefoHeight = document.body.clientHeight;
+   }
+    var feefoSlider = document.getElementById("feefopage");
+    if (feefoSlider != null && feefoSlider.offsetLeft > -2000){
+        feefoSlider.style.right = Math.round((feefoWidth - feefoSlider.offsetWidth)/2) + "px";
+    }
+  
+}          
+            
+   
+   function FeefoSlideUpRun(){
+        
+   	FeefoSlider = document.getElementById('feefopage');
+  	FeefoPageHeight = FeefoSlider.offsetHeight;
+ 	feefoPageUp = feefoHeight - FeefoPageHeight;
+    	if (feefoPageUp < 0) feefoPageUp = 0;
+     
+   	if(FeefoSliderTop <= feefoPageUp){
+   	   feefoSliding = false;
+   	   FeefoSliderTop=feefoPageUp;
+   	   FeefoSlider.style.top = feefoPageUp + "px";
+   	   clearInterval(FeefoSliderIntervalId);
+  	}else{
+   	   FeefoSliderTop -= FeefoSlideSpeed;
+   	   if(FeefoSliderTop < feefoPageUp)
+   	      FeefoSliderTop = feefoPageUp;
+   	   FeefoSlider.style.top = FeefoSliderTop + "px";
+   	}
+   }	
+   
+   function FeefoSlideDownRun(){
+  	   FeefoSlider = document.getElementById('feefopage');
+	   if(FeefoSliderTop >=feefoHeight || FeefoSliderTop < 0){
+	      feefoSliding = false;
+	      FeefoSliderTop=feefoHeight;
+	      FeefoSlider.style.top = feefoHeight + "px";
+              FeefoSlider.style.cssFloat = "right";
+	      FeefoSlider.style.right="3000px";
+	      clearInterval(FeefoSliderIntervalId);
+	   }else{
+	      FeefoSliderTop += FeefoSlideSpeed;
+	      if(FeefoSliderTop > feefoHeight)
+	         FeefoSliderTop = feefoHeight;
+	      FeefoSlider.style.top = FeefoSliderTop + "px";
+	   }
+
+	}
+
+
+function feefojsonfeed(obj) {
+
+
+ 
+  var htmlText = "";
+  for (i = 0;i < obj.html.length;i++)
+		htmlText+=obj.html[i];
+   		htmlText = htmlText.replace(/¬/gi,"'");
+  htmlText = htmlText.replace("'WINDOWOPEN'","\"window.open(this.href,'Feefo','width=800,height=600,scrollbars,resizable'); return false\"");
+
+ var feefoScript = "";
+//extract the script if it exists
+ if (htmlText.substring(0,5)=="<?xml")
+    htmlText = htmlText.substring(htmlText.indexOf(">") + 1);
+  if (htmlText.substring(0,7) == "<script"){
+	var feefoEndScript = htmlText.indexOf("</script>") + 9;
+	feefoScript = htmlText.substring(8,feefoEndScript-9);
+	htmlText = htmlText.substring(feefoEndScript);
+  }
+ 
+  
+   //extract the stylesheet to put into the header for IE
+  if (htmlText.indexOf("stylesheet") > 0){ 
+     
+     var spos = htmlText.indexOf("stylesheet");
+     apos = -1;
+     var tpos = 0;
+     while (apos < spos){
+     var apos = htmlText.indexOf("<",apos + 1);
+     	if (apos < spos) tpos = apos;
+     }
+     var hrefpos = htmlText.indexOf("href=", tpos);
+     var quotemark = htmlText.substring(hrefpos + 5, hrefpos + 6);
+      var endpos = htmlText.indexOf(quotemark, hrefpos + 7);
+      stylesheetURL = htmlText.substring(hrefpos + 6,endpos);
+      htmlText = htmlText.substring(htmlText.indexOf(">",endpos)+1);
+      if (!feeforeloading){
+  		var headID = document.getElementsByTagName("head")[0];         
+  		var cssNode = document.createElement('link');
+  		cssNode.type = 'text/css';
+  		cssNode.rel = 'stylesheet';
+  		cssNode.href = stylesheetURL;
+  		cssNode.media = 'screen';
+  		headID.appendChild(cssNode);
+  		//note:  maybe I should remove the original line...
+      }
+  }
+  var feefopage1 = document.getElementById("feefopage");
+  if (!feeforeloading){
+     feefopage1.style.right = "3000px";
+     feefopage1.style.top = feefoHeight + "px";
+  }
+  feefopage1.innerHTML = htmlText;
+  if (feefoScript > ""){ 
+   	  var feefoScriptElement = document.createElement('script');
+ 	  var fhead = document.getElementsByTagName('head')[0] || document.documentElement;
+ 	  feefoScriptElement.text = feefoScript;
+ 	   fhead.appendChild(feefoScriptElement);
+}
+ if (feeforeloading)return;
+
+    setTimeout("feefoLoadPage()", 500);
+ 
+
+}	
+
+  function feefoLoadPage(){
+      feefoSwitch(feefoMethod);
+  }
+
+  function FeefoSlide(){
+      //this has to be here as it is called from the XSL sheets
+      FeefoToggle(feefoMethod)
+ }
+
+ function tellGoogle(action, instance){
+
+         if(typeof(_gat)=='function'){
+             _gaq.push(['_trackEvent', "Feefo", action, instance]);
+             // Do tracking with new-style analytics
+         } else if (typeof(urchinTracker)=='function') {
+             // Do tracking with old-style analytics
+             pageTracker._trackEvent("Feefo", action, instance);
+         }
+
+
+ }
+
+ function FeefoToggle(method){
+     feefoMethod = method;
+      if (feefoParams.indexOf("examplesupplier") > 0 || feefoParams.indexOf("landlordsinsurance") > 0)
+         tellGoogle("logo_click", feefoproductfound)
+	if(document.getElementById("feefopage").zIndex < 1000) {
+		// Feefo CSS hasn't loaded yet - do not execute.
+		return;
+	}
+     if (document.getElementById("feefopage").innerHTML.length < 10){ //no page loaded, but length may be 5!?
+      	feefojson();
+      	return;
+    }
+     feefoSwitch(method);
+ }
+
+ function feefoSwitch(method){
+    switch(method){
+	case "popup":
+	  FeefoPopup(false);
+	  break;
+	case "lightbox":
+	  FeefoPopup(true);
+	  break;
+	case "bottomrightsmooth":
+   	  FeefoSmooth("right");
+	  break;
+	case "bottomleftsmooth":
+   	  FeefoSmooth("left");
+	  break;
+    case "ExpertOpinion":
+          FeefoPopup(false);
+          feefoTabChosen(2);
+        break;
+    case "QA":
+         FeefoPopup(false);
+        feefoTabChosen(3);
+        break;
+
+    default:
+       FeefoPopup(false);
+    }
+ }   
+
+
+ function FeefoSmooth(feefoPosition){
+    	   if(feefoSliding)
+	      return;
+  	   FeefoSlider = document.getElementById('feefopage');
+   	   feefoSliding = true;
+	   if(FeefoSlider.style.right == "3000px"){
+	      FeefoSliderTop = feefoHeight;
+	      if (feefoPosition == "right"){
+                FeefoSlider.style.cssFloat = "right";		
+		FeefoSlider.style.right = "10px";
+	      }else{
+  	        FeefoSlider.style.right = "";
+            FeefoSlider.style.width = FeefoSlider.offsetWidth + "px";
+  	        FeefoSlider.style.cssFloat = "left";
+		    FeefoSlider.style.left = "10px";
+	      }
+	      FeefoSliderIntervalId = setInterval('FeefoSlideUpRun()', 20);
+	   }   
+	   else{
+	      FeefoSliderIntervalId = setInterval('FeefoSlideDownRun()', 20);
+	   }   
+   }
+
+
+	   
+   function FeefoPopup(fade){
+	
+           
+       if (document.getElementById("feefopage").innerHTML.length < 10){ //no page loaded, but length may be 5!?
+ 
+      	feefojson();
+      	return;
+		}
+       window.scrollTo(0,0);
+      FeefoSlider = document.getElementById("feefopage");
+		FeefoFade = document.getElementById("feefofade"); 
+	    FeefoSlider.style.left = "";
+ 	   if(FeefoSlider.style.right == "3000px"){
+ 	   	newright = Math.round((feefoWidth - FeefoSlider.offsetWidth)/2);
+ 	   	newtop = Math.round((feefoHeight - FeefoSlider.offsetHeight)/2);
+	      FeefoSlider.style.right = newright + "px";
+	      if (FeefoSlider.offsetHeight < 600)
+	         FeefoSlider.style.top = newtop + "px";
+          else
+              FeefoSlider.style.top = "10px";
+          if (fade) FeefoFade.style.display = "block";
+	      
+	   }   
+	   else{
+	      FeefoSlider.style.right = "3000px";
+	      FeefoFade.style.display = "none";
+	   }   
+   }
+   
+      function zapParam(params, tozap){
+          paramPos = params.indexOf("&" + tozap)    ;
+          if (paramPos > 0){
+              paramEnd = params.indexOf("&",paramPos + 1);
+              if (paramEnd < 0) return params.substring(0,paramPos);
+              return params.substring(0,paramPos) + params.substring(paramEnd);
+          }
+         return params;
+      }
+   
+function feefoloadlogo(logon, feefooptions){
+ 
+   
+ 	feefooptions = feefooptions.replace(/\&amp;/g,'&'); // in case the feefooptions are HTML encoded.
+  	feefoParams = "logon=" + logon;
+     	if (feefoproductfound ==""){
+		 feefoproductcode = document.getElementById("feefoproduct");
+   	   	if (feefoproductcode){
+		  if (/\S/.test(feefoproductcode.value)  && feefoproductcode.value != "service")
+      		      feefoParams += "&vendorref=" +  escape(feefoproductcode.value) + "&mode=product";
+		}
+        }else feefoParams +="&vendorref=" + escape(feefoproductfound) + "&mode=product";
+  	if (feefooptions.indexOf("method")>-1) {
+		feefoMethod=feefooptions.substring(feefooptions.indexOf("method")+7,feefooptions.indexOf("&"));
+		feefooptions=feefooptions.substring(feefooptions.indexOf("&",feefooptions.indexOf("method"))+1);
+	}
+	
+   feefoParams = feefooptions + "&" + feefoParams + "&pagelink=" + encodeURI(window.location.href);
+  	
+ 		 
+	feefotemplate = feefomaketemplate();
+	feefotemplate=feefotemplate.replace("LOGOPARAMS", feefoParams);
+	//feefotemplate=feefotemplate.replace("VIEWPARAMS", feefoParams);
+	feefotemplate=feefotemplate.replace("FEEFOMETHOD", feefoMethod);
+	feefotemplate=feefotemplate.replace("WINDOWOPEN","");
+	document.write(feefotemplate);
+		if(document.getElementById("feefologohere")){
+		document.getElementById("feefologohere").innerHTML=document.getElementById("feefologo").innerHTML;
+		document.getElementById("feefologo").innerHTML="";
+	}
+	feefoGetWindowSize();
+	
+}	
+   
+function feefomaketemplate(){
+
+    var pageHTML ='<div id="feefopage" style="position:absolute;right:3000px;top:3000px;"></div><div id="feefofade"></div>';
+    var body = document.getElementsByTagName("body")[0];
+    var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+    if (is_firefox){
+        var feefoFade = document.createElement("div");
+        feefoFade.id = "feefofade";
+        body.insertBefore(feefoFade,body.firstChild);
+        var feefopage=document.createElement("div");
+        feefopage.id = "feefopage";
+        body.insertBefore(feefopage, body.firstChild);
+    } else{
+        body.insertAdjacentHTML("afterbegin",pageHTML);
+    }
+
+
+
+    feefotemplate ='<LINK rel="stylesheet" type="text/css" href="' + feefoproto + '//www.feefo.com/feefo/XSL/reviews/feefoframe.css"/>';
+	feefotemplate+='<div id="feefologo" class="feefologoright">';
+	feefotemplate+='   <a id="feefologoa"  category="Feefo" action="Logo-click" class="trackable" href="javascript:FeefoToggle(&quot;FEEFOMETHOD&quot;);">';
+	feefotemplate+='			<img src="' + feefoproto + '//www.feefo.com/feefo/feefologo.jsp?LOGOPARAMS"/>';
+	feefotemplate+='		</a>';
+	feefotemplate+='</div>';
+	//feefotemplate+='					<div id="feefopage" style="position:absolute;right:3000px;top:3000px;">';
+	//feefotemplate+='					</div>';
+	//feefotemplate+='					<div id="feefofade"></div>';
+ return feefotemplate;
+}    
+
+
+
+
+
+function feefojson(){
+    feefoXMLParams = zapParam(feefoParams,"productlogo");
+    feefoXMLParams = zapParam(feefoXMLParams,"servicelogo");
+    feefoXMLParams = feefoXMLParams.replace(/http:\/\/www.feefo.com\/feefo\/XSL\/reviews\//g,"");
+   htmlText = feefoproto + "//www.feefo.com/feefo/xmlfeed.jsp?html=json&" + feefoXMLParams +  ((feefoproto=="https:") ? "&protocol=https" : "");
+   script = document.createElement('script'),
+   head = document.getElementsByTagName('head')[0] || document.documentElement;
+   script.src = htmlText;
+    head.appendChild(script);
+}   
+
+
+function feeforeload(start, limit, sortby){
+    feeforeloading = true;
+    feefoParams = zapParam(feefoParams,"froms");
+    feefoParams = zapParam(feefoParams, "limit");
+    feefoParams = zapParam(feefoParams, "sortby");
+    feefoParams += "&froms=" + start + "&limit=" + limit + "&sortby=" + sortby;
+    feefojson();
+}
