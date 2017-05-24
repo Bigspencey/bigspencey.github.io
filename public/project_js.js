@@ -15,8 +15,8 @@ var decisionString = experimentKey + variationKey;
 window.track = {eVar65: decisionString};
 
 // Fullstack + Web Client-Side Tracking
-var addToCart = document.querySelector("add-to-cart");
-var purchaseConfirmation = document.querySelector("purchase-confirmation");
+var addToCart = document.querySelector(".add-to-cart");
+var purchaseConfirmation = document.querySelector(".purchase-confirmation");
 
 // Very basic wrapper to dispatch events for both Fullstack/Mobile and Web.
 // This wrapper assumes that eventNames are consistent across projects.
