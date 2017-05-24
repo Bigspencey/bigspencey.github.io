@@ -32,6 +32,7 @@ function sendOptlyEvent(eventName, tagsObject) {
 	optimizelyClientInstance.track(eventName, userId, {}, tagsObject);
 }
 
+// Dispatch events based on clicks/EventManager events, etc...
 addToCart.addEventListener("click", function() {
 	sendOptlyEvent("addToCart", {category: 'tvs'})
 });
