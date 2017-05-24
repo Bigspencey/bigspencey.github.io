@@ -21,18 +21,18 @@ var purchaseConfirmation = document.querySelector(".purchase-confirmation");
 // Very basic wrapper to dispatch events for both Fullstack/Mobile and Web.
 // This wrapper assumes that eventNames are consistent across projects.
 function sendOptlyEvent(eventName, tagsObject) {
-	// Optimizely Web API
+	// Optimizely Web API (This is what Drew already implemented in Project JS)
 	window.optimizely.push({
 	  type: "event",
 	  eventName: eventName,
 	  tags: tagsObject
 	});
-	// Optimizely Fullstack/Mobile API
+	// Optimizely Fullstack/Mobile API (This has not been implemented.)
 	// https://developers.optimizely.com/x/solutions/sdks/reference/index.html?language=javascript#event-tags
 	optimizelyClientInstance.track(eventName, userId, {}, tagsObject);
 }
 
-// Dispatch events based on clicks/EventManager events, etc...
+// Dispatch tracking calls based on clicks/EventManager events, etc...
 addToCart.addEventListener("click", function() {
 	sendOptlyEvent("addToCart", {category: 'tvs'})
 });
