@@ -1,6 +1,7 @@
 window.optimizely = window.optimizely || [];
 // JavaScript SDK Initialization
 var optimizelyClientInstance = optimizelyClient.createInstance({datafile: window.DATAFILE});
+// Retrieve Full Stack User ID (Presumably from cookie)
 var userId = "user123";
 /*
 	Scenario:
@@ -12,31 +13,40 @@ var variationKey = optimizelyClientInstance.activate(experimentKey, userId);
 
 // Take experimentKey and variationKey and send off to Adobe Analytics.
 var decisionString = experimentKey + variationKey;
+// Use Best Buy's existing `window.track` object.
 window.track = {eVar65: decisionString};
 
-// Fullstack + Web Client-Side Tracking
+// Grab appropriate selectors
 var addToCart = document.querySelector(".add-to-cart");
 var purchaseConfirmation = document.querySelector(".purchase-confirmation");
 
-// Very basic wrapper to dispatch events for both Fullstack/Mobile and Web.
-// This wrapper assumes that eventNames are consistent across projects.
-function sendOptlyEvent(eventName, tagsObject) {
-	// Optimizely Web API (This is what Drew already implemented in Project JS)
-	window.optimizely.push({
-	  type: "event",
-	  eventName: eventName,
-	  tags: tagsObject
-	});
-	// Optimizely Fullstack/Mobile API (This has not been implemented.)
-	// https://developers.optimizely.com/x/solutions/sdks/reference/index.html?language=javascript#event-tags
-	optimizelyClientInstance.track(eventName, userId, {}, tagsObject);
-}
+// For Full Stack we need to listen for Web events to be dispatched.
+window.optimizely.push({
+  type: "addListener",
+  filter: {
+    type: "analytics",
+    name: "trackEvent"
+  },
+  // Add the trackEvent function as a handler.
+  handler: function(event) {
+  	debugger;
+  	optimizelyClientInstance.track(eventName, userId, {}, tagsObject);
+  }
+});
 
 // Dispatch tracking calls based on clicks/EventManager events, etc...
 addToCart.addEventListener("click", function() {
-	sendOptlyEvent("addToCart", {category: 'tvs'})
+	window.optimizely.push({
+	  type: "event",
+	  eventName: "addToCart",
+	  tags: {category: 'tvs'}
+	});
 });
 
 purchaseConfirmation.addEventListener("click", function() {
-	sendOptlyEvent("purchaseConfirmation", {units: 2});
+	window.optimizely.push({
+	  type: "event",
+	  eventName: "purchaseConfirmation",
+	  tags: {units: 2}
+	});
 });
