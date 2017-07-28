@@ -8,6 +8,8 @@ var userId = "user123";
 	"exampleExperiment" is running on this page (i.e. we've called getVariation() on the server)
 	"nonActiveExperiment" is running, but not on this page so we won't call activate() and send an impression event here.
 */
+
+// We need some way to identify which experiment is active for a given page.
 var experimentKey = 'exampleExperiment';
 var variationKey = optimizelyClientInstance.activate(experimentKey, userId);
 
@@ -27,10 +29,10 @@ window.optimizely.push({
     type: "analytics",
     name: "trackEvent"
   },
-  // Add the trackEvent function as a handler.
+  // Attributes are not included in this example, but can be added depending on the use case.
   handler: function(event) {
   	debugger;
-  	optimizelyClientInstance.track(eventName, userId, {}, tagsObject);
+  	optimizelyClientInstance.track(event.data.apiName, userId, {}, event.data.tags);
   }
 });
 
