@@ -27,26 +27,8 @@ window.optimizely.push({
   },
   // Attributes are not included in this example, but can be added depending on the use case.
   handler: function(event) {
-  	optimizelyClientInstance.track(event.data.apiName, userId, {}, event.data.tags);
+  	// Revenue and Numeric Metric values are under the metrics object so need to merge with tags for Full Stack.
+  	var tags = Object.assign(event.data.metrics, event.data.tags);
+  	optimizelyClientInstance.track(event.data.apiName, userId, {}, tags);
   }
-});
-
-/*
-	All existing event dispatching would still exist in Optimizely's Project JS. (i.e. everything below this line)
-*/
-
-document.querySelector(".add-to-cart").addEventListener("click", function() {
-	window.optimizely.push({
-	  type: "event",
-	  eventName: "addToCart",
-	  tags: {category: 'tvs'}
-	});
-});
-
-document.querySelector(".purchase-confirmation").addEventListener("click", function() {
-	window.optimizely.push({
-	  type: "event",
-	  eventName: "purchaseConfirmation",
-	  tags: {revenue: 5000, value: 2}
-	});
 });
