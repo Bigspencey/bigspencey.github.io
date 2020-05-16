@@ -6,22 +6,7 @@
         <title>Static Hosting Example</title>
     </head>
     <body>
-        <p>This static page is designed to show off Optimizely's client-side tracking capabilities. Click the buttons below to dispatch events for both the Web Project and the Fullstack project.</p>
-        <br>
-        <button class="add-to-cart">Add to Cart</button>
-        <br>
-        <button class="purchase-confirmation">Purchase Confirmation</button>
-        <!-- Here is the Optimizely datafile passed as an inline script. -->
-        <script type="text/javascript">
-            window.DATAFILE = {"version":"2","projectId":"8308118310","experiments":[{"status":"Archived","audienceIds":[],"variations":[{"id":"8318343051","key":"Original"},{"id":"8304917442","key":"Variation"}],"id":"8316483639","key":"testing","layerId":"8313407939","trafficAllocation":[{"entityId":"8318343051","endOfRange":10000}],"forcedVariations":{}},{"status":"Running","audienceIds":[],"variations":[{"id":"8396121107","key":"control"},{"id":"8405250342","key":"variation1"},{"id":"8401980556","key":"variation2"}],"id":"8396081757","key":"exampleExperiment","layerId":"8404780720","trafficAllocation":[{"entityId":"8396121107","endOfRange":3333},{"entityId":"8401980556","endOfRange":6667},{"entityId":"8405250342","endOfRange":10000}],"forcedVariations":{}},{"status":"Running","audienceIds":[],"variations":[{"id":"8408570308","key":"control"},{"id":"8403370419","key":"variation1"}],"id":"8403511225","key":"nonActiveExperiment","layerId":"8400021016","trafficAllocation":[{"entityId":"8403370419","endOfRange":5000},{"entityId":"8408570308","endOfRange":10000}],"forcedVariations":{}}],"audiences":[{"conditions":"[\"and\", [\"or\", [\"or\", {\"name\": \"device_type\", \"type\": \"custom_attribute\", \"value\": \"iphone\"}]]]","id":"8326130716","name":"iPhone Users"}],"groups":[],"attributes":[{"id":"8320541476","key":"device_type"}],"revision":"14","events":[{"experimentIds":["8396081757","8403511225"],"id":"8405211230","key":"purchaseConfirmation"},{"experimentIds":["8396081757","8403511225"],"id":"8409340463","key":"addToCart"}],"accountId":"1416366117"}
-        </script>
-        <!-- Here is the Javascript SDK. -->
-        <script src="public/optimizely_javascript_sdk.js"></script>
-        <!-- This is some JS file delivered before Optimizely Web starts executing.-->
-        <script src="public/tracking.js"></script>
-        <!-- Pretend this is Project JS -->
-        <script src="public/project_js.js"></script>
-        <!-- Here is the Optimizely Web Snippet. -->
-        <script src="https://cdn.optimizely.com/js/8389235092.js"></script>
+        <h1>Welcome to My Static Site</h1>
+        <p>This site is used for testing purposes. It will serve you no value.</p>
     </body>
 </html>
